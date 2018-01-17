@@ -1,0 +1,30 @@
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <string.h>
+#include <iostream>
+
+int main()
+{
+  int socketfd;
+  sockaddr_in server;
+  char buffer[256];
+
+  socketfd  = socket(AF_INET, SOCK_STREAM,0);
+  server.sin_family = AF_INET;
+  server.sin_port = htons(8000);
+  server.sin_addr.s_addr = INADDR_ANY;
+
+  std::cout << bind(socketfd, (sockaddr *) &server, sizeof(server)) << std::endl;
+  listen(socketfd, 5);
+
+  int newsocketfd = accept(socketfd, (sockaddr *) &server, (socklen_t *)sizeof(server));
+  std::cout << newsocketfd << std::endl;
+
+  char  *reply = "Hello from server";
+  send(newsocketfd, reply, strlen(reply),0);
+
+  
+
+  
+}
